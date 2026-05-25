@@ -84,18 +84,20 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  const activities = Array.from(form.querySelectorAll("input[name='activity']:checked")).map((checkbox) => checkbox.value);
+  const selectedActivities = Array.from(form.querySelectorAll("input[name='activity']:checked")).map(
+    (checkbox) => checkbox.value
+  );
   const memo = memoInput.value.trim();
 
-  const all = getAllRecords();
-  const existing = all[user] || [];
-  existing.push({
+  const allUserRecords = getAllRecords();
+  const userRecords = allUserRecords[user] || [];
+  userRecords.push({
     date: new Date().toLocaleString("ko-KR"),
-    activities,
+    activities: selectedActivities,
     memo
   });
-  all[user] = existing;
-  saveAllRecords(all);
+  allUserRecords[user] = userRecords;
+  saveAllRecords(allUserRecords);
 
   form.reset();
   renderRecords();
