@@ -51,15 +51,16 @@ function renderRecords() {
     return;
   }
 
-  entries
-    .slice()
-    .reverse()
-    .forEach((entry) => {
-      const li = document.createElement("li");
-      const activities = entry.activities.length > 0 ? entry.activities.join(", ") : "선택 없음";
-      li.textContent = `${entry.date} | ${activities}${entry.memo ? ` | 메모: ${entry.memo}` : ""}`;
-      recordsList.appendChild(li);
-    });
+  for (let index = entries.length - 1; index >= 0; index -= 1) {
+    const entry = entries[index];
+    const li = document.createElement("li");
+    const activities = entry.activities.length > 0 ? entry.activities.join(", ") : "선택 없음";
+    const parsedDate = entry.date ? new Date(entry.date) : null;
+    const displayDate =
+      parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toLocaleString("ko-KR") : entry.date || "";
+    li.textContent = `${displayDate} | ${activities}${entry.memo ? ` | 메모: ${entry.memo}` : ""}`;
+    recordsList.appendChild(li);
+  }
 }
 
 saveUserButton.addEventListener("click", () => {
@@ -92,7 +93,7 @@ form.addEventListener("submit", (event) => {
   const allUserRecords = getAllRecords();
   const userRecords = allUserRecords[user] || [];
   userRecords.push({
-    date: new Date().toLocaleString("ko-KR"),
+    date: new Date().toISOString(),
     activities: selectedActivities,
     memo
   });
