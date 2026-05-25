@@ -1,5 +1,6 @@
 const USER_KEY = "finger_user";
 const RECORD_KEY = "finger_records";
+const NO_ACTIVITIES_TEXT = "선택 없음";
 
 const usernameInput = document.getElementById("username");
 const saveUserButton = document.getElementById("saveUser");
@@ -28,6 +29,11 @@ function saveAllRecords(data) {
   localStorage.setItem(RECORD_KEY, JSON.stringify(data));
 }
 
+function formatRecordDate(dateString) {
+  const parsedDate = dateString ? new Date(dateString) : null;
+  return parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toLocaleString("ko-KR") : dateString || "";
+}
+
 function renderUser() {
   const user = getCurrentUser();
   activeUserText.textContent = user ? `현재 사용자: ${user}` : "사용자를 먼저 저장해 주세요.";
@@ -51,13 +57,11 @@ function renderRecords() {
     return;
   }
 
-  for (let index = entries.length - 1; index >= 0; index -= 1) {
-    const entry = entries[index];
+  for (let entryIndex = entries.length - 1; entryIndex >= 0; entryIndex -= 1) {
+    const entry = entries[entryIndex];
     const li = document.createElement("li");
-    const activities = entry.activities.length > 0 ? entry.activities.join(", ") : "선택 없음";
-    const parsedDate = entry.date ? new Date(entry.date) : null;
-    const displayDate =
-      parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate.toLocaleString("ko-KR") : entry.date || "";
+    const activities = entry.activities.length > 0 ? entry.activities.join(", ") : NO_ACTIVITIES_TEXT;
+    const displayDate = formatRecordDate(entry.date);
     li.textContent = `${displayDate} | ${activities}${entry.memo ? ` | 메모: ${entry.memo}` : ""}`;
     recordsList.appendChild(li);
   }
