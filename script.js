@@ -84,9 +84,7 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  const activities = Array.from(form.querySelectorAll("input[name='activity']:checked")).map(
-    (checkbox) => checkbox.value
-  );
+  const activities = Array.from(form.querySelectorAll("input[name='activity']:checked")).map((checkbox) => checkbox.value);
   const memo = memoInput.value.trim();
 
   const all = getAllRecords();
